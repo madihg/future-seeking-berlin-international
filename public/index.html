@@ -13,7 +13,7 @@
       body, html {
         width: 100%;
         height: 100%;
-        font-family: system-ui, -apple-system, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
         background: #fff;
       }
       #container {
@@ -47,7 +47,7 @@
         border: none;
         border-radius: 5px;
         background: #f0f0f0;
-        font-family: system-ui, -apple-system, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
       }
       #userInput:focus {
         outline: none;
@@ -61,7 +61,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-family: system-ui, -apple-system, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
       }
       #plantButton:hover {
         background: #333;
@@ -80,16 +80,20 @@
         word-wrap: break-word;
       }
       
-      /* Bottom controls */
+      /* Bottom controls - left side */
       #textInputContainer {
         position: fixed;
         bottom: 10px;
         left: 10px;
         display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
+        flex-direction: column;
+        gap: 6px;
         z-index: 10;
-        max-width: calc(100% - 20px);
+      }
+      .bottom-row {
+        display: flex;
+        gap: 5px;
+        align-items: center;
       }
       #userCount {
         display: inline-block;
@@ -99,26 +103,13 @@
         border-radius: 5px;
         font-size: 14px;
       }
-      #qrButton {
-        padding: 5px 10px;
-        border-radius: 5px;
-        border: none;
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        cursor: pointer;
-        font-size: 14px;
-        font-family: system-ui, -apple-system, sans-serif;
-      }
-      #qrButton:hover {
-        background: rgba(0, 0, 0, 0.7);
-      }
       #secretField {
         width: 100px;
         padding: 5px;
         border-radius: 5px;
         border: none;
         font-size: 14px;
-        font-family: system-ui, -apple-system, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
       }
       #secretField::placeholder {
         color: #999;
@@ -131,7 +122,7 @@
         color: #666;
         cursor: default;
         font-size: 14px;
-        font-family: system-ui, -apple-system, sans-serif;
+        font-family: 'Times New Roman', Times, serif;
         transition: background 0.2s ease, color 0.2s ease;
       }
       #secretButton.active {
@@ -141,6 +132,34 @@
       }
       #secretButton.active:hover {
         background: #3a8eef;
+      }
+      
+      /* QR Button - bottom right */
+      #qrButton {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease;
+      }
+      #qrButton:hover {
+        background: rgba(0, 0, 0, 0.7);
+      }
+      #qrButton::before {
+        content: '';
+        width: 18px;
+        height: 18px;
+        border: 2px solid white;
+        border-radius: 2px;
       }
       
       /* QR Modal */
@@ -220,7 +239,7 @@
           bottom: 5px;
           left: 5px;
         }
-        #userCount, #qrButton {
+        #userCount {
           font-size: 12px;
           padding: 4px 8px;
         }
@@ -232,8 +251,18 @@
           font-size: 12px;
           padding: 4px 8px;
         }
+        #qrButton {
+          width: 38px;
+          height: 38px;
+          bottom: 10px;
+          right: 10px;
+        }
+        #qrButton::before {
+          width: 14px;
+          height: 14px;
+        }
         #submissions {
-          padding-bottom: 60px;
+          padding-bottom: 80px;
         }
         #qrClose {
           top: 16px;
@@ -259,11 +288,16 @@
     </div>
     
     <div id="textInputContainer">
-      <div id="userCount">Loading...</div>
-      <button id="qrButton">QR</button>
-      <input type="text" id="secretField" placeholder="TEXT FIELD" />
-      <button id="secretButton">BUTTON EMPTY</button>
+      <div class="bottom-row">
+        <div id="userCount">Loading...</div>
+      </div>
+      <div class="bottom-row">
+        <input type="text" id="secretField" placeholder="TEXT FIELD" />
+        <button id="secretButton">BUTTON EMPTY</button>
+      </div>
     </div>
+    
+    <button id="qrButton" aria-label="Show QR Code"></button>
 
     <!-- QR Code Modal -->
     <div id="qrModal">
