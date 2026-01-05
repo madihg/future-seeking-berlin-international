@@ -2,126 +2,145 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Planting Secrets</title>
     <style>
       * {
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
       }
-      body {
+      body, html {
+        width: 100%;
+        height: 100%;
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #fff;
+      }
+      #container {
         padding: 20px;
-        font-family: 'Times New Roman', serif;
-        line-height: 1.6;
         max-width: 800px;
         margin: 0 auto;
         min-height: 100vh;
       }
       h1 {
-        font-weight: normal;
-        font-size: clamp(1.5rem, 5vw, 2.5rem);
-        margin-bottom: 10px;
+        font-weight: 500;
+        font-size: clamp(1.4rem, 5vw, 2rem);
+        margin-bottom: 8px;
         line-height: 1.3;
       }
-      p {
-        font-size: clamp(1rem, 3.5vw, 1.2rem);
-        margin-bottom: 24px;
+      .description {
+        font-size: clamp(0.9rem, 3vw, 1rem);
+        margin-bottom: 20px;
         color: #666;
-        font-style: italic;
       }
       .input-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
         margin-bottom: 20px;
       }
       #userInput {
         flex: 1;
         min-width: 200px;
-        padding: 12px 16px;
+        padding: 10px 12px;
         font-size: 16px;
-        border: 1px solid #ddd;
+        border: none;
         border-radius: 5px;
-        font-family: 'Times New Roman', serif;
+        background: #f0f0f0;
+        font-family: system-ui, -apple-system, sans-serif;
       }
       #userInput:focus {
         outline: none;
-        border-color: #000;
+        background: #e8e8e8;
       }
-      button {
-        padding: 12px 24px;
-        font-size: 16px;
+      #plantButton {
+        padding: 10px 20px;
+        font-size: 14px;
         background: #000;
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-family: 'Times New Roman', serif;
-        white-space: nowrap;
-        transition: background 0.2s ease;
+        font-family: system-ui, -apple-system, sans-serif;
       }
-      button:hover {
+      #plantButton:hover {
         background: #333;
       }
-      button:active {
-        background: #555;
-      }
       #submissions {
-        margin-top: 20px;
-        padding-bottom: 60px;
+        margin-top: 16px;
+        padding-bottom: 80px;
       }
       .submission {
-        margin: 15px 0;
-        padding: 15px;
-        background: white;
-        color: black;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-family: 'Times New Roman', serif;
-        font-size: clamp(14px, 3vw, 16px);
-        line-height: 1.5;
+        margin: 10px 0;
+        padding: 12px;
+        background: #f5f5f5;
+        border-radius: 5px;
+        font-size: 14px;
+        line-height: 1.4;
         word-wrap: break-word;
       }
+      
+      /* Bottom controls */
       #textInputContainer {
         position: fixed;
-        bottom: 16px;
-        left: 16px;
+        bottom: 10px;
+        left: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
         z-index: 10;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .bottom-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        max-width: calc(100% - 20px);
       }
       #userCount {
         display: inline-block;
         color: white;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 8px 12px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
         border-radius: 5px;
         font-size: 14px;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
       }
-      
-      /* QR Code button */
       #qrButton {
-        padding: 8px 12px;
-        font-size: 14px;
-        background: rgba(0, 0, 0, 0.6);
-        color: white;
-        border: none;
+        padding: 5px 10px;
         border-radius: 5px;
+        border: none;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
         cursor: pointer;
-        font-family: 'Times New Roman', serif;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        transition: background 0.2s ease;
+        font-size: 14px;
+        font-family: system-ui, -apple-system, sans-serif;
       }
       #qrButton:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.7);
+      }
+      #secretField {
+        width: 100px;
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+        font-size: 14px;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #secretField::placeholder {
+        color: #999;
+      }
+      #secretButton {
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: none;
+        background: #ccc;
+        color: #666;
+        cursor: default;
+        font-size: 14px;
+        font-family: system-ui, -apple-system, sans-serif;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      #secretButton.active {
+        background: #4a9eff;
+        color: white;
+        cursor: pointer;
+      }
+      #secretButton.active:hover {
+        background: #3a8eef;
       }
       
       /* QR Modal */
@@ -149,7 +168,6 @@
         font-size: 48px;
         color: white;
         cursor: pointer;
-        font-family: 'Times New Roman', serif;
         font-weight: 300;
         line-height: 1;
         transition: opacity 0.2s ease;
@@ -178,62 +196,15 @@
         font-size: 14px;
         margin-top: 20px;
         opacity: 0.7;
-        font-family: 'Times New Roman', serif;
       }
       
-      /* Secret field */
-      #secretField {
-        width: 90px;
-        padding: 8px 10px;
-        font-size: 12px;
-        font-family: 'Times New Roman', serif;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 5px;
-        background: rgba(0, 0, 0, 0.4);
-        color: white;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        transition: border-color 0.2s ease;
-      }
-      #secretField:focus {
-        outline: none;
-        border-color: rgba(255, 255, 255, 0.6);
-      }
-      #secretField::placeholder {
-        color: rgba(255, 255, 255, 0.5);
-        font-style: normal;
-        font-size: 11px;
-      }
-      #secretButton {
-        padding: 8px 12px;
-        font-size: 11px;
-        background: rgba(255, 255, 255, 0.2);
-        color: rgba(255, 255, 255, 0.5);
-        border: none;
-        border-radius: 5px;
-        cursor: default;
-        font-family: 'Times New Roman', serif;
-        white-space: nowrap;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        transition: background 0.3s ease, color 0.3s ease;
-      }
-      #secretButton.active {
-        background: white;
-        color: black;
-        cursor: pointer;
-      }
-      #secretButton.active:hover {
-        background: #eee;
-      }
-      
-      /* Mobile responsiveness */
+      /* Mobile adjustments */
       @media (max-width: 600px) {
-        body {
+        #container {
           padding: 16px;
         }
         h1 {
-          font-size: 1.5rem;
+          font-size: 1.3rem;
         }
         .input-container {
           flex-direction: column;
@@ -242,20 +213,27 @@
           width: 100%;
           min-width: unset;
         }
-        .input-container button {
+        #plantButton {
           width: 100%;
         }
         #textInputContainer {
-          left: 16px;
-          bottom: 12px;
-          flex-direction: row;
+          bottom: 5px;
+          left: 5px;
+        }
+        #userCount, #qrButton {
+          font-size: 12px;
+          padding: 4px 8px;
+        }
+        #secretField {
+          width: 80px;
+          font-size: 12px;
+        }
+        #secretButton {
+          font-size: 12px;
+          padding: 4px 8px;
         }
         #submissions {
-          padding-bottom: 100px;
-        }
-        #textInputContainer {
-          left: 12px;
-          right: 12px;
+          padding-bottom: 60px;
         }
         #qrClose {
           top: 16px;
@@ -270,25 +248,23 @@
     </style>
   </head>
   <body>
-    <h1>What future are you secretly longing for?</h1>
-    <p>Plant the future you carry but rarely speak: A hope, a world, a version of yourself waiting to exist.</p>
-    <div class="input-container">
-      <input type="text" id="userInput" placeholder="Seed your secret future" />
-      <button onclick="submitSentence()">Plant</button>
-    </div>
-
-    <div id="submissions"></div>
-    <div id="textInputContainer">
-      <div class="bottom-row">
-        <div id="userCount">Loading...</div>
-        <button id="qrButton">QR</button>
+    <div id="container">
+      <h1>What future are you secretly longing for?</h1>
+      <p class="description">Plant the future you carry but rarely speak: A hope, a world, a version of yourself waiting to exist.</p>
+      <div class="input-container">
+        <input type="text" id="userInput" placeholder="Seed your secret future" />
+        <button id="plantButton" onclick="submitSentence()">Plant</button>
       </div>
-      <div class="bottom-row">
-        <input type="text" id="secretField" placeholder="TEXT FIELD" />
-        <button id="secretButton">BUTTON EMPTY</button>
-      </div>
+      <div id="submissions"></div>
     </div>
     
+    <div id="textInputContainer">
+      <div id="userCount">Loading...</div>
+      <button id="qrButton">QR</button>
+      <input type="text" id="secretField" placeholder="TEXT FIELD" />
+      <button id="secretButton">BUTTON EMPTY</button>
+    </div>
+
     <!-- QR Code Modal -->
     <div id="qrModal">
       <span id="qrClose">&times;</span>

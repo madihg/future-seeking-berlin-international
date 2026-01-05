@@ -44,10 +44,10 @@ This application is built for ephemeral, session-based collective writing. Submi
 
 ### Local Development
 
-```bash
-npm install
-npm run dev
-```
+   ```bash
+   npm install
+   npm run dev
+   ```
 
 ### Deployment
 
