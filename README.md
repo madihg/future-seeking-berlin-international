@@ -1,105 +1,81 @@
-# How Do You Home? - Psychic Ingestion
+# Planting Secrets: Psychic Ingestion
 
-A real-time collaborative text submission application inspired by the elo-2025 project. Users can submit sentences that appear in real-time for all participants to see.
+**A collective digital ritual for the lecture-performance by Halim Madi**
 
-## Features
+---
 
-- **Real-time Collaboration**: See other users' submissions appear instantly
-- **Simple Interface**: Clean, minimal design focused on text submission
-- **Live User Count**: See how many people are currently active
-- **Persistent Storage**: Submissions are stored in memory during session
-- **Heartbeat System**: Tracks active users with automatic cleanup
-- **Responsive Design**: Works on desktop and mobile devices
+**BI Talk — Berlin International University of Applied Sciences**  
+📅 January 6, 2026 · 18:00  
+📍 Studio 1, Salzufer 6, 10587 Berlin
 
-## How to Use
+---
 
-1. **Submit a Sentence**: Type your text in the input field and click "Enter"
-2. **View Submissions**: See all submitted sentences displayed below
-3. **Real-time Updates**: Watch as new submissions appear automatically
-4. **User Tracking**: See how many people are currently active
+## About the Performance
 
-## Local Development
+*Planting Secrets: Poetics of Migration and Machine* explores the deep resonance between migrant consciousness and cyborg consciousness. Drawing on Bernard Stiegler's theory of epiphylogenesis and André Leroi-Gourhan's evolutionary anthropology, this lecture-performance reflects on how humans have always externalized memory—from stone tools and language to servers and large language models.
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+The migrant, always anticipating rupture, becomes a prototype for the future: compelled to carry as little as possible, and thus to inscribe their soul elsewhere.
 
-2. Run the development server:
-   ```bash
-   npm run dev
-   ```
+This web application serves as a **psychic go-bag**—a shared vessel where audience members can deposit fragments of thought, memory, and response in real-time. Together, we build a collective externalization: a temporary monument to what we carry, and what we leave behind.
 
-3. Open your browser to `http://localhost:3000`
+## How to Participate
 
-## Deployment to Vercel
+1. **Visit the live site** on your phone or laptop
+2. **Submit a fragment**: a memory, a word, something you carry, something you've lost
+3. **Watch the collective mind emerge** as others' submissions appear in real-time
+4. **Witness** as these fragments become part of the performance
 
-This application is fully compatible with Vercel's serverless architecture:
+*What would you pack if you had to leave in ten minutes?*  
+*What have you already lost that you still carry?*
 
-1. Install Vercel CLI:
-   ```bash
-   npm install -g vercel
-   ```
+---
 
-2. Deploy:
-   ```bash
-   vercel
-   ```
+## About the Artist
 
-The application uses API-based real-time updates instead of WebSockets, making it perfect for Vercel deployment.
+**Halim Madi** is a Lebanese artist and researcher working at the intersection of artificial intelligence, migration, and poetic technologies. With a background in data science and a practice rooted in performance and electronic literature, his work explores how memory, identity, and language are encoded, displaced, and remixed through machines.
 
-## Project Structure
+Currently a resident artist at Counterpulse (San Francisco), Halim creates installations, lectures, and digital rituals that investigate the aesthetics of displacement and the psychotechnics of survival. His recent projects examine AI not as a tool, but as a mirror of diasporic consciousness—a site of both exteriorization and communion.
+
+---
+
+## Technical Notes
+
+This application is built for ephemeral, session-based collective writing. Submissions exist only in memory and dissolve when the session ends—a digital enactment of impermanence.
+
+### Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+### Deployment
+
+Deployed on Vercel's serverless architecture. The polling-based real-time system ensures all participants see submissions as they arrive.
+
+### Project Structure
 
 ```
 ├── api/
-│   ├── index.js          # Main Express server
-│   ├── submit.js         # Submit/get submissions API
-│   └── heartbeat.js      # User heartbeat tracking API
+│   ├── index.js          # Express server
+│   ├── submit.js         # Submission endpoint
+│   └── heartbeat.js      # Presence tracking
 ├── public/
-│   ├── index.html        # Main application page
-│   └── client.js         # Frontend JavaScript
-├── package.json          # Dependencies and scripts
-├── vercel.json          # Vercel deployment configuration
-└── README.md            # This file
+│   ├── index.html        # Interface
+│   └── client.js         # Client-side logic
+├── package.json
+├── vercel.json
+└── README.md
 ```
 
-## Technical Details
-
-- **Backend**: Express.js with serverless API endpoints
-- **Frontend**: Vanilla JavaScript with polling for real-time updates
-- **Real-time**: Polling-based updates every 3 seconds
-- **Storage**: In-memory storage (submissions reset on server restart)
-- **User Tracking**: Heartbeat system with 2-minute timeout
-- **Styling**: Clean, minimal CSS with Times New Roman font
-
-## API Endpoints
-
-- `GET /api/submit` - Retrieve all submissions
-- `POST /api/submit` - Submit a new sentence
-- `POST /api/heartbeat` - Update user activity status
-
-## Environment Variables
-
-For production deployment, you may want to set:
-
-- `NODE_ENV=production`
-- `PORT=3000` (for local development)
-
-## Browser Support
-
-- Chrome 60+
-- Firefox 55+
-- Safari 12+
-- Edge 79+
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test locally
-5. Submit a pull request
+---
 
 ## License
 
-MIT License - feel free to use this project for your own purposes!
+MIT License
+
+---
+
+*"AI is not an alien other, but a kind of go-bag—a tool born of exile, storing the fragments of selves we can no longer carry."*
+
+— Halim Madi

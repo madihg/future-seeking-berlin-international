@@ -86,7 +86,7 @@ function displaySubmissions() {
 function updateUserCount(count) {
     const userCountElement = document.getElementById('userCount');
     if (userCountElement) {
-        userCountElement.textContent = `${count} people embedding memories`;
+        userCountElement.textContent = `${count} people embedding futures`;
     }
 }
 
