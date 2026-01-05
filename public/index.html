@@ -176,44 +176,49 @@
         font-family: 'Times New Roman', serif;
       }
       
-      /* Secret field */
+      /* Secret field - top right, subtle */
       #secretContainer {
         position: fixed;
-        bottom: 16px;
+        top: 16px;
         right: 16px;
         z-index: 10;
         display: flex;
         align-items: center;
         gap: 6px;
+        opacity: 0.4;
+        transition: opacity 0.3s ease;
+      }
+      #secretContainer:hover,
+      #secretContainer:focus-within {
+        opacity: 1;
       }
       #secretField {
-        width: 100px;
-        padding: 8px 10px;
-        font-size: 12px;
+        width: 80px;
+        padding: 6px 8px;
+        font-size: 11px;
         font-family: 'Times New Roman', serif;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        border-radius: 5px;
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        transition: border-color 0.2s ease;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.8);
+        transition: border-color 0.2s ease, width 0.2s ease;
       }
       #secretField:focus {
         outline: none;
         border-color: #000;
+        width: 100px;
       }
       #secretField::placeholder {
-        color: #999;
+        color: #aaa;
         font-style: normal;
-        font-size: 11px;
+        font-size: 10px;
       }
       #secretButton {
-        padding: 8px 12px;
-        font-size: 11px;
-        background: #ccc;
-        color: #666;
+        padding: 6px 10px;
+        font-size: 10px;
+        background: #ddd;
+        color: #888;
         border: none;
-        border-radius: 5px;
+        border-radius: 4px;
         cursor: default;
         font-family: 'Times New Roman', serif;
         white-space: nowrap;
@@ -252,14 +257,11 @@
           flex-direction: row;
         }
         #submissions {
-          padding-bottom: 100px;
+          padding-bottom: 70px;
         }
         #secretContainer {
-          right: 16px;
-          bottom: 50px;
-        }
-        #secretField {
-          width: 90px;
+          top: 12px;
+          right: 12px;
         }
         #qrClose {
           top: 16px;
