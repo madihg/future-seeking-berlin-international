@@ -87,8 +87,13 @@
         left: 16px;
         z-index: 10;
         display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .bottom-row {
+        display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       }
       #userCount {
         display: inline-block;
@@ -176,61 +181,50 @@
         font-family: 'Times New Roman', serif;
       }
       
-      /* Secret field - top right, subtle */
-      #secretContainer {
-        position: fixed;
-        top: 16px;
-        right: 16px;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        opacity: 0.4;
-        transition: opacity 0.3s ease;
-      }
-      #secretContainer:hover,
-      #secretContainer:focus-within {
-        opacity: 1;
-      }
+      /* Secret field */
       #secretField {
-        width: 80px;
-        padding: 6px 8px;
-        font-size: 11px;
+        width: 90px;
+        padding: 8px 10px;
+        font-size: 12px;
         font-family: 'Times New Roman', serif;
-        border: 1px solid rgba(0, 0, 0, 0.15);
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.8);
-        transition: border-color 0.2s ease, width 0.2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        transition: border-color 0.2s ease;
       }
       #secretField:focus {
         outline: none;
-        border-color: #000;
-        width: 100px;
+        border-color: rgba(255, 255, 255, 0.6);
       }
       #secretField::placeholder {
-        color: #aaa;
+        color: rgba(255, 255, 255, 0.5);
         font-style: normal;
-        font-size: 10px;
+        font-size: 11px;
       }
       #secretButton {
-        padding: 6px 10px;
-        font-size: 10px;
-        background: #ddd;
-        color: #888;
+        padding: 8px 12px;
+        font-size: 11px;
+        background: rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.5);
         border: none;
-        border-radius: 4px;
+        border-radius: 5px;
         cursor: default;
         font-family: 'Times New Roman', serif;
         white-space: nowrap;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
         transition: background 0.3s ease, color 0.3s ease;
       }
       #secretButton.active {
-        background: #000;
-        color: white;
+        background: white;
+        color: black;
         cursor: pointer;
       }
       #secretButton.active:hover {
-        background: #333;
+        background: #eee;
       }
       
       /* Mobile responsiveness */
@@ -257,10 +251,10 @@
           flex-direction: row;
         }
         #submissions {
-          padding-bottom: 70px;
+          padding-bottom: 100px;
         }
-        #secretContainer {
-          top: 12px;
+        #textInputContainer {
+          left: 12px;
           right: 12px;
         }
         #qrClose {
@@ -285,13 +279,14 @@
 
     <div id="submissions"></div>
     <div id="textInputContainer">
-      <div id="userCount">Loading...</div>
-      <button id="qrButton">QR</button>
-    </div>
-    
-    <div id="secretContainer">
-      <input type="text" id="secretField" placeholder="TEXT FIELD" />
-      <button id="secretButton">BUTTON EMPTY</button>
+      <div class="bottom-row">
+        <div id="userCount">Loading...</div>
+        <button id="qrButton">QR</button>
+      </div>
+      <div class="bottom-row">
+        <input type="text" id="secretField" placeholder="TEXT FIELD" />
+        <button id="secretButton">BUTTON EMPTY</button>
+      </div>
     </div>
     
     <!-- QR Code Modal -->
