@@ -13,8 +13,8 @@
       body, html {
         width: 100%;
         height: 100%;
-        font-family: 'Times New Roman', Times, serif;
         background: #fff;
+        font-family: system-ui, -apple-system, sans-serif;
       }
       #container {
         padding: 20px;
@@ -47,7 +47,7 @@
         border: none;
         border-radius: 5px;
         background: #f0f0f0;
-        font-family: 'Times New Roman', Times, serif;
+        font-family: system-ui, -apple-system, sans-serif;
       }
       #userInput:focus {
         outline: none;
@@ -61,7 +61,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-family: 'Times New Roman', Times, serif;
+        font-family: system-ui, -apple-system, sans-serif;
       }
       #plantButton:hover {
         background: #333;
@@ -80,20 +80,16 @@
         word-wrap: break-word;
       }
       
-      /* Bottom controls - left side */
+      /* Bottom controls */
       #textInputContainer {
         position: fixed;
         bottom: 10px;
         left: 10px;
         display: flex;
-        flex-direction: column;
-        gap: 6px;
-        z-index: 10;
-      }
-      .bottom-row {
-        display: flex;
+        flex-wrap: wrap;
         gap: 5px;
-        align-items: center;
+        z-index: 10;
+        max-width: calc(100% - 20px);
       }
       #userCount {
         display: inline-block;
@@ -104,34 +100,28 @@
         font-size: 14px;
       }
       #secretField {
-        width: 100px;
+        width: 150px;
         padding: 5px;
         border-radius: 5px;
         border: none;
         font-size: 14px;
-        font-family: 'Times New Roman', Times, serif;
-      }
-      #secretField::placeholder {
-        color: #999;
+        font-family: system-ui, -apple-system, sans-serif;
       }
       #secretButton {
         padding: 5px 10px;
         border-radius: 5px;
         border: none;
-        background: #ccc;
-        color: #666;
-        cursor: default;
-        font-size: 14px;
-        font-family: 'Times New Roman', Times, serif;
-        transition: background 0.2s ease, color 0.2s ease;
-      }
-      #secretButton.active {
         background: #4a9eff;
         color: white;
         cursor: pointer;
+        font-size: 14px;
+        font-family: system-ui, -apple-system, sans-serif;
       }
-      #secretButton.active:hover {
+      #secretButton:hover {
         background: #3a8eef;
+      }
+      .hidden {
+        display: none;
       }
       
       /* QR Button - bottom right */
@@ -205,11 +195,6 @@
         align-items: center;
         padding: 20px;
       }
-      #qrCode img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
       #qrUrl {
         color: white;
         font-size: 14px;
@@ -244,7 +229,7 @@
           padding: 4px 8px;
         }
         #secretField {
-          width: 80px;
+          width: 120px;
           font-size: 12px;
         }
         #secretButton {
@@ -288,13 +273,8 @@
     </div>
     
     <div id="textInputContainer">
-      <div class="bottom-row">
-        <div id="userCount">Loading...</div>
-      </div>
-      <div class="bottom-row">
-        <input type="text" id="secretField" placeholder="TEXT FIELD" />
-        <button id="secretButton">BUTTON EMPTY</button>
-      </div>
+      <div id="userCount">Loading...</div>
+      <input type="text" id="secretField" placeholder="searching for home" />
     </div>
     
     <button id="qrButton" aria-label="Show QR Code"></button>
@@ -309,26 +289,19 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="/public/client.js"></script>
     <script>
-      // Secret phrase detection
-      const secretField = document.getElementById('secretField');
-      const secretButton = document.getElementById('secretButton');
-      const SECRET_PHRASE = 'PASSWORD';
-      const SECRET_URL = '/secret.html';
-      
-      secretField.addEventListener('input', function() {
-        const value = this.value.trim();
-        if (value === SECRET_PHRASE) {
-          secretButton.classList.add('active');
-          secretButton.textContent = 'BUTTON';
-        } else {
-          secretButton.classList.remove('active');
-          secretButton.textContent = 'BUTTON EMPTY';
-        }
-      });
-      
-      secretButton.addEventListener('click', function() {
-        if (secretButton.classList.contains('active')) {
-          window.location.href = SECRET_URL;
+      // Secret phrase detection - button appears when correct word is typed
+      document.getElementById('secretField').addEventListener('input', function() {
+        const value = this.value;
+        const container = document.getElementById('textInputContainer');
+        
+        if (value.toLowerCase() === 'spanning' && !document.getElementById('secretButton')) {
+          const button = document.createElement('button');
+          button.id = 'secretButton';
+          button.textContent = 'worlds';
+          button.onclick = function() {
+            window.location.href = '/secret.html';
+          };
+          container.appendChild(button);
         }
       });
       
