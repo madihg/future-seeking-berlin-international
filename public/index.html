@@ -286,7 +286,6 @@
       <div id="qrUrl">future-seeking-berlin-international.vercel.app</div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="/public/client.js"></script>
     <script>
       // Secret phrase detection - button appears when correct word is typed
@@ -311,19 +310,15 @@
       const qrClose = document.getElementById('qrClose');
       const qrCodeContainer = document.getElementById('qrCode');
       
-      // Generate QR code client-side (no external requests)
+      // Add QR code image
       const SITE_URL = 'https://future-seeking-berlin-international.vercel.app/';
-      QRCode.toCanvas(document.createElement('canvas'), SITE_URL, {
-        width: 500,
-        margin: 2,
-        color: { dark: '#000000', light: '#ffffff' }
-      }, function(error, canvas) {
-        if (!error) {
-          canvas.style.width = '100%';
-          canvas.style.height = '100%';
-          qrCodeContainer.appendChild(canvas);
-        }
-      });
+      const qrImg = document.createElement('img');
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=' + encodeURIComponent(SITE_URL);
+      qrImg.alt = 'QR Code';
+      qrImg.style.width = '100%';
+      qrImg.style.height = '100%';
+      qrImg.style.objectFit = 'contain';
+      qrCodeContainer.appendChild(qrImg);
       
       qrButton.addEventListener('click', function() {
         qrModal.classList.add('active');
