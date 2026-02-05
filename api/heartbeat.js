@@ -1,90 +1,80 @@
 const { kv } = require('@vercel/kv');
 
 const USERS_KEY = 'active_users';
+let fallbackUsers = {};
 
 module.exports = async (req, res) => {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Parse JSON body
-  let body = '';
-  req.on('data', chunk => {
-    body += chunk.toString();
-  });
-  
-  await new Promise((resolve) => {
-    req.on('end', () => {
-      try {
-        req.body = JSON.parse(body);
-      } catch (error) {
-        req.body = {};
-      }
-      resolve();
-    });
-  });
-
-  await handleHeartbeat(req, res);
-};
-
-async function handleHeartbeat(req, res) {
   try {
-    const { userId } = req.body || {};
+    // Parse body
+    let body = {};
+    if (req.body) {
+      body = req.body;
+    } else {
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      const rawBody = Buffer.concat(chunks).toString();
+      if (rawBody) {
+        try {
+          body = JSON.parse(rawBody);
+        } catch (e) {
+          body = {};
+        }
+      }
+    }
+
+    const { userId } = body;
     
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
     }
 
-    // Update user's last seen timestamp
-    await kv.hset(USERS_KEY, { [userId]: Date.now() });
-    
-    // Get active user count
-    const activeUsers = await getActiveUserCount();
-    
-    res.status(200).json({ 
+    let activeUsers = 0;
+
+    try {
+      await kv.hset(USERS_KEY, { [userId]: Date.now() });
+      activeUsers = await countActiveUsers();
+    } catch (kvError) {
+      console.error('KV Error:', kvError);
+      fallbackUsers[userId] = Date.now();
+      activeUsers = Object.keys(fallbackUsers).length;
+    }
+
+    return res.status(200).json({ 
       success: true, 
       activeUsers: activeUsers 
     });
   } catch (error) {
-    console.error('Error in heartbeat:', error);
-    res.status(500).json({ error: 'Failed to process heartbeat' });
+    console.error('Server Error:', error);
+    return res.status(500).json({ error: 'Server error' });
   }
-}
+};
 
-async function getActiveUserCount() {
+async function countActiveUsers() {
   try {
     const users = await kv.hgetall(USERS_KEY) || {};
     const twoMinutesAgo = Date.now() - (2 * 60 * 1000);
-    
-    let activeCount = 0;
-    const expiredUsers = [];
-    
-    for (const [userId, lastSeen] of Object.entries(users)) {
+    let count = 0;
+    for (const [id, lastSeen] of Object.entries(users)) {
       if (lastSeen > twoMinutesAgo) {
-        activeCount++;
-      } else {
-        expiredUsers.push(userId);
+        count++;
       }
     }
-    
-    // Clean up expired users
-    if (expiredUsers.length > 0) {
-      await kv.hdel(USERS_KEY, ...expiredUsers);
-    }
-    
-    return activeCount;
-  } catch (error) {
+    return count;
+  } catch (e) {
     return 0;
   }
 }
