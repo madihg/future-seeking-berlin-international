@@ -11,6 +11,11 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
+// Serve admin page
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/admin.html"));
+});
+
 // Serve client.js with proper content type
 app.get("/public/client.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
