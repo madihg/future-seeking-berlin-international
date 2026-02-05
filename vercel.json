@@ -12,11 +12,16 @@
     {
       "src": "api/heartbeat.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/reset.js",
+      "use": "@vercel/node"
     }
   ],
   "rewrites": [
     { "source": "/api/submit", "destination": "/api/submit.js" },
     { "source": "/api/heartbeat", "destination": "/api/heartbeat.js" },
+    { "source": "/api/reset", "destination": "/api/reset.js" },
     { "source": "/public/(.*)", "destination": "/api/index.js" },
     { "source": "/(.*)", "destination": "/api/index.js" }
   ],
