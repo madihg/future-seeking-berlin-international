@@ -16,12 +16,17 @@
     {
       "src": "api/reset.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/debug.js",
+      "use": "@vercel/node"
     }
   ],
   "rewrites": [
     { "source": "/api/submit", "destination": "/api/submit.js" },
     { "source": "/api/heartbeat", "destination": "/api/heartbeat.js" },
     { "source": "/api/reset", "destination": "/api/reset.js" },
+    { "source": "/api/debug", "destination": "/api/debug.js" },
     { "source": "/public/(.*)", "destination": "/api/index.js" },
     { "source": "/(.*)", "destination": "/api/index.js" }
   ],
@@ -32,8 +37,14 @@
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" }
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        }
       ]
     }
   ]
