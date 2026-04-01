@@ -1,225 +1,231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #f5f5f5;
-    }
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    h1 {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .code-display {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-    .code-digit {
-      width: 40px;
-      height: 50px;
-      border: 2px solid #ddd;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 600;
-      color: #333;
-    }
-    .code-digit.filled {
-      border-color: #000;
-      background: #f9f9f9;
-    }
-    .keypad {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      max-width: 240px;
-      margin: 0 auto;
-    }
-    .key {
-      width: 70px;
-      height: 70px;
-      border: none;
-      border-radius: 50%;
-      background: #f0f0f0;
-      font-size: 24px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-    .key:hover {
-      background: #e0e0e0;
-    }
-    .key:active {
-      background: #d0d0d0;
-      transform: scale(0.95);
-    }
-    .key.clear {
-      font-size: 14px;
-      background: #ffebee;
-      color: #c62828;
-    }
-    .key.clear:hover {
-      background: #ffcdd2;
-    }
-    .message {
-      margin-top: 20px;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      display: none;
-    }
-    .message.success {
-      display: block;
-      background: #e8f5e9;
-      color: #2e7d32;
-    }
-    .message.error {
-      display: block;
-      background: #ffebee;
-      color: #c62828;
-    }
-    .message.loading {
-      display: block;
-      background: #e3f2fd;
-      color: #1565c0;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Enter Admin Code</h1>
-    <div class="code-display">
-      <div class="code-digit" id="d0"></div>
-      <div class="code-digit" id="d1"></div>
-      <div class="code-digit" id="d2"></div>
-      <div class="code-digit" id="d3"></div>
-      <div class="code-digit" id="d4"></div>
-      <div class="code-digit" id="d5"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      h1 {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .code-display {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+      .code-digit {
+        width: 40px;
+        height: 50px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+      }
+      .code-digit.filled {
+        border-color: #000;
+        background: #f9f9f9;
+      }
+      .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        max-width: 240px;
+        margin: 0 auto;
+      }
+      .key {
+        width: 70px;
+        height: 70px;
+        border: none;
+        border-radius: 50%;
+        background: #f0f0f0;
+        font-size: 24px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      .key:hover {
+        background: #e0e0e0;
+      }
+      .key:active {
+        background: #d0d0d0;
+        transform: scale(0.95);
+      }
+      .key.clear {
+        font-size: 14px;
+        background: #ffebee;
+        color: #c62828;
+      }
+      .key.clear:hover {
+        background: #ffcdd2;
+      }
+      .message {
+        margin-top: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        display: none;
+      }
+      .message.success {
+        display: block;
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+      .message.error {
+        display: block;
+        background: #ffebee;
+        color: #c62828;
+      }
+      .message.loading {
+        display: block;
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Enter Admin Code</h1>
+      <div class="code-display">
+        <div class="code-digit" id="d0"></div>
+        <div class="code-digit" id="d1"></div>
+        <div class="code-digit" id="d2"></div>
+        <div class="code-digit" id="d3"></div>
+        <div class="code-digit" id="d4"></div>
+        <div class="code-digit" id="d5"></div>
+      </div>
+      <div class="keypad">
+        <button class="key" onclick="addDigit('1')">1</button>
+        <button class="key" onclick="addDigit('2')">2</button>
+        <button class="key" onclick="addDigit('3')">3</button>
+        <button class="key" onclick="addDigit('4')">4</button>
+        <button class="key" onclick="addDigit('5')">5</button>
+        <button class="key" onclick="addDigit('6')">6</button>
+        <button class="key" onclick="addDigit('7')">7</button>
+        <button class="key" onclick="addDigit('8')">8</button>
+        <button class="key" onclick="addDigit('9')">9</button>
+        <button class="key clear" onclick="clearCode()">Clear</button>
+        <button class="key" onclick="addDigit('0')">0</button>
+        <button class="key clear" onclick="backspace()">←</button>
+      </div>
+      <div class="message" id="message"></div>
     </div>
-    <div class="keypad">
-      <button class="key" onclick="addDigit('1')">1</button>
-      <button class="key" onclick="addDigit('2')">2</button>
-      <button class="key" onclick="addDigit('3')">3</button>
-      <button class="key" onclick="addDigit('4')">4</button>
-      <button class="key" onclick="addDigit('5')">5</button>
-      <button class="key" onclick="addDigit('6')">6</button>
-      <button class="key" onclick="addDigit('7')">7</button>
-      <button class="key" onclick="addDigit('8')">8</button>
-      <button class="key" onclick="addDigit('9')">9</button>
-      <button class="key clear" onclick="clearCode()">Clear</button>
-      <button class="key" onclick="addDigit('0')">0</button>
-      <button class="key clear" onclick="backspace()">←</button>
-    </div>
-    <div class="message" id="message"></div>
-  </div>
 
-  <script>
-    let code = '';
-    const CORRECT_CODE = '001188';
-    
-    function updateDisplay() {
-      for (let i = 0; i < 6; i++) {
-        const digit = document.getElementById('d' + i);
-        if (code[i]) {
-          digit.textContent = '•';
-          digit.classList.add('filled');
-        } else {
-          digit.textContent = '';
-          digit.classList.remove('filled');
-        }
-      }
-    }
-    
-    function addDigit(d) {
-      if (code.length < 6) {
-        code += d;
-        updateDisplay();
-        
-        if (code.length === 6) {
-          checkCode();
-        }
-      }
-    }
-    
-    function clearCode() {
-      code = '';
-      updateDisplay();
-      hideMessage();
-    }
-    
-    function backspace() {
-      code = code.slice(0, -1);
-      updateDisplay();
-      hideMessage();
-    }
-    
-    function showMessage(text, type) {
-      const msg = document.getElementById('message');
-      msg.textContent = text;
-      msg.className = 'message ' + type;
-    }
-    
-    function hideMessage() {
-      document.getElementById('message').className = 'message';
-    }
-    
-    async function checkCode() {
-      if (code === CORRECT_CODE) {
-        showMessage('Resetting database...', 'loading');
-        
-        try {
-          const response = await fetch('/api/reset?key=' + code);
-          const data = await response.json();
-          
-          if (data.success) {
-            showMessage('Database reset successfully!', 'success');
+    <script>
+      let code = "";
+      const CORRECT_CODE = "001188";
+
+      function updateDisplay() {
+        for (let i = 0; i < 6; i++) {
+          const digit = document.getElementById("d" + i);
+          if (code[i]) {
+            digit.textContent = "•";
+            digit.classList.add("filled");
           } else {
-            showMessage('Error: ' + (data.error || 'Unknown error'), 'error');
+            digit.textContent = "";
+            digit.classList.remove("filled");
           }
-        } catch (error) {
-          showMessage('Error: ' + error.message, 'error');
         }
-        
-        setTimeout(() => {
-          code = '';
-          updateDisplay();
-        }, 2000);
-      } else {
-        showMessage('Incorrect code', 'error');
-        setTimeout(() => {
-          code = '';
-          updateDisplay();
-          hideMessage();
-        }, 1500);
       }
-    }
-  </script>
-</body>
+
+      function addDigit(d) {
+        if (code.length < 6) {
+          code += d;
+          updateDisplay();
+
+          if (code.length === 6) {
+            checkCode();
+          }
+        }
+      }
+
+      function clearCode() {
+        code = "";
+        updateDisplay();
+        hideMessage();
+      }
+
+      function backspace() {
+        code = code.slice(0, -1);
+        updateDisplay();
+        hideMessage();
+      }
+
+      function showMessage(text, type) {
+        const msg = document.getElementById("message");
+        msg.textContent = text;
+        msg.className = "message " + type;
+      }
+
+      function hideMessage() {
+        document.getElementById("message").className = "message";
+      }
+
+      async function checkCode() {
+        if (code === CORRECT_CODE) {
+          showMessage("Resetting database...", "loading");
+
+          try {
+            const response = await fetch("/api/reset?key=" + code);
+            const data = await response.json();
+
+            if (data.success) {
+              showMessage("Database reset successfully!", "success");
+            } else {
+              showMessage("Error: " + (data.error || "Unknown error"), "error");
+            }
+          } catch (error) {
+            showMessage("Error: " + error.message, "error");
+          }
+
+          setTimeout(() => {
+            code = "";
+            updateDisplay();
+          }, 2000);
+        } else {
+          showMessage("Incorrect code", "error");
+          setTimeout(() => {
+            code = "";
+            updateDisplay();
+            hideMessage();
+          }, 1500);
+        }
+      }
+    </script>
+  </body>
 </html>

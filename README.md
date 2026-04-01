@@ -12,7 +12,7 @@
 
 ## About the Performance
 
-*Planting Secrets: Poetics of Migration and Machine* explores the deep resonance between migrant consciousness and cyborg consciousness. Drawing on Bernard Stiegler's theory of epiphylogenesis and André Leroi-Gourhan's evolutionary anthropology, this lecture-performance reflects on how humans have always externalized memory—from stone tools and language to servers and large language models.
+_Planting Secrets: Poetics of Migration and Machine_ explores the deep resonance between migrant consciousness and cyborg consciousness. Drawing on Bernard Stiegler's theory of epiphylogenesis and André Leroi-Gourhan's evolutionary anthropology, this lecture-performance reflects on how humans have always externalized memory—from stone tools and language to servers and large language models.
 
 The migrant, always anticipating rupture, becomes a prototype for the future: compelled to carry as little as possible, and thus to inscribe their soul elsewhere.
 
@@ -25,8 +25,8 @@ This web application serves as a **psychic go-bag**—a shared vessel where audi
 3. **Watch the collective mind emerge** as others' submissions appear in real-time
 4. **Witness** as these fragments become part of the performance
 
-*What would you pack if you had to leave in ten minutes?*  
-*What have you already lost that you still carry?*
+_What would you pack if you had to leave in ten minutes?_  
+_What have you already lost that you still carry?_
 
 ---
 
@@ -44,10 +44,10 @@ This application is built for ephemeral, session-based collective writing. Submi
 
 ### Local Development
 
-   ```bash
-   npm install
-   npm run dev
-   ```
+```bash
+npm install
+npm run dev
+```
 
 ### Deployment
 
@@ -76,6 +76,6 @@ MIT License
 
 ---
 
-*"AI is not an alien other, but a kind of go-bag—a tool born of exile, storing the fragments of selves we can no longer carry."*
+_"AI is not an alien other, but a kind of go-bag—a tool born of exile, storing the fragments of selves we can no longer carry."_
 
 — Halim Madi
