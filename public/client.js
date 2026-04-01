@@ -25,7 +25,7 @@ async function submitSentence() {
 
 async function loadSubmissions() {
   try {
-    const response = await fetch("/api/submit");
+    const response = await fetch("/api/submit?uid=" + userId);
     if (response.ok) {
       const data = await response.json();
       submissions = data.submissions;
@@ -34,7 +34,7 @@ async function loadSubmissions() {
       updateUserCount(data.activeUsers);
     }
   } catch (error) {
-    console.error("Error loading submissions:", error);
+    console.error("Error loading:", error);
   }
 }
 
@@ -64,27 +64,13 @@ function updateUserCount(count) {
   }
 }
 
-async function sendHeartbeat() {
-  try {
-    await fetch("/api/heartbeat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
-    });
-  } catch (error) {
-    console.error("Heartbeat error:", error);
-  }
-}
-
 document.addEventListener("DOMContentLoaded", function () {
   loadSubmissions();
-  sendHeartbeat();
-  setInterval(sendHeartbeat, 30000);
 
-  // Poll every 3 seconds - always refresh (submissions can expire)
+  // Poll every 3 seconds - also tracks user activity
   setInterval(async () => {
     try {
-      const response = await fetch("/api/submit");
+      const response = await fetch("/api/submit?uid=" + userId);
       if (response.ok) {
         const data = await response.json();
         if (data.count !== lastSubmissionCount) {

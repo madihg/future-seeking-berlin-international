@@ -1,33 +1,16 @@
-const { kv } = require("@vercel/kv");
-
+// Reset is handled by submit.js TTL (30 min auto-expire)
+// This endpoint is kept for admin use
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   const { key } = req.query;
   if (key !== "001188") {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  try {
-    // Clear all submission fields from the hash
-    const all = (await kv.hgetall("futures")) || {};
-    const keys = Object.keys(all);
-    if (keys.length > 0) {
-      await kv.hdel("futures", ...keys);
-    }
-
-    // Clear active users
-    const users = (await kv.hgetall("active_users")) || {};
-    const userKeys = Object.keys(users);
-    if (userKeys.length > 0) {
-      await kv.hdel("active_users", ...userKeys);
-    }
-
-    return res.status(200).json({ success: true, message: "Reset done" });
-  } catch (error) {
-    console.error("Reset error:", error);
-    return res.status(500).json({ error: error.message });
-  }
+  // Can't clear another function's memory directly
+  // Submissions auto-expire after 30 minutes
+  return res
+    .status(200)
+    .json({ success: true, message: "Submissions auto-expire in 30 minutes" });
 };

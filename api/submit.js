@@ -1,8 +1,12 @@
-const { kv } = require("@vercel/kv");
+// Pure in-memory storage - no database needed
+// Data persists as long as the serverless function stays warm
+// (polling every 3s keeps it warm during the event)
 
-const KEY = "futures";
-const USERS_KEY = "active_users";
-const TTL_MS = 30 * 60 * 1000; // 30 minutes
+const submissions = new Map();
+const users = new Map();
+
+const SUB_TTL = 30 * 60 * 1000; // 30 minutes
+const USER_TTL = 2 * 60 * 1000; // 2 minutes
 
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -13,11 +17,21 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  try {
+  const now = Date.now();
+
+  // Clean expired entries
+  for (const [id, sub] of submissions) {
+    if (now - sub.timestamp > SUB_TTL) submissions.delete(id);
+  }
+  for (const [id, lastSeen] of users) {
+    if (now - lastSeen > USER_TTL) users.delete(id);
+  }
+
+  if (req.method === "POST") {
     let body = {};
-    if (req.method === "POST" && req.body) {
+    if (req.body) {
       body = req.body;
-    } else if (req.method === "POST") {
+    } else {
       const chunks = [];
       for await (const chunk of req) {
         chunks.push(chunk);
@@ -32,95 +46,40 @@ module.exports = async (req, res) => {
       }
     }
 
-    const now = Date.now();
-    const cutoff = now - TTL_MS;
-
-    if (req.method === "POST") {
-      const { text, userId } = body;
-      if (!text || !text.trim()) {
-        return res.status(400).json({ error: "Text is required" });
-      }
-
-      const subId = now + "-" + Math.random().toString(36).substr(2, 9);
-      const submission = {
-        id: subId,
-        text: text.trim(),
-        timestamp: now,
-        userId: userId || "anon",
-      };
-
-      // Use hset - proven to work on this KV instance
-      await kv.hset(KEY, { [subId]: JSON.stringify(submission) });
-
-      if (userId) {
-        await kv.hset(USERS_KEY, { [userId]: now });
-      }
-
-      const activeUsers = await countActive();
-
-      return res.status(200).json({
-        success: true,
-        submission,
-        activeUsers,
-      });
-    } else if (req.method === "GET") {
-      const all = (await kv.hgetall(KEY)) || {};
-
-      const submissions = Object.values(all)
-        .map((v) => {
-          try {
-            return typeof v === "string" ? JSON.parse(v) : v;
-          } catch {
-            return null;
-          }
-        })
-        .filter((s) => s && s.timestamp > cutoff)
-        .sort((a, b) => a.timestamp - b.timestamp);
-
-      // Clean up expired entries
-      const expired = Object.entries(all)
-        .filter(([, v]) => {
-          try {
-            const s = typeof v === "string" ? JSON.parse(v) : v;
-            return !s || s.timestamp <= cutoff;
-          } catch {
-            return true;
-          }
-        })
-        .map(([k]) => k);
-
-      if (expired.length > 0) {
-        await kv.hdel(KEY, ...expired);
-      }
-
-      const activeUsers = await countActive();
-
-      return res.status(200).json({
-        submissions,
-        count: submissions.length,
-        activeUsers,
-      });
-    } else {
-      return res.status(405).json({ error: "Method not allowed" });
+    const { text, userId } = body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: "Text is required" });
     }
-  } catch (error) {
-    console.error("Error:", error);
-    return res
-      .status(500)
-      .json({ error: "Server error", message: error.message });
+
+    const id = now + "-" + Math.random().toString(36).substr(2, 9);
+    const submission = { id, text: text.trim(), timestamp: now };
+
+    submissions.set(id, submission);
+
+    if (userId) users.set(userId, now);
+
+    return res.status(200).json({
+      success: true,
+      submission,
+      activeUsers: users.size,
+    });
   }
+
+  if (req.method === "GET") {
+    // Track user from poll
+    const uid = req.query && req.query.uid;
+    if (uid) users.set(uid, now);
+
+    const list = [...submissions.values()].sort(
+      (a, b) => a.timestamp - b.timestamp,
+    );
+
+    return res.status(200).json({
+      submissions: list,
+      count: list.length,
+      activeUsers: users.size,
+    });
+  }
+
+  return res.status(405).json({ error: "Method not allowed" });
 };
-
-async function countActive() {
-  try {
-    const users = (await kv.hgetall(USERS_KEY)) || {};
-    const cutoff = Date.now() - 2 * 60 * 1000;
-    let count = 0;
-    for (const [, lastSeen] of Object.entries(users)) {
-      if (lastSeen > cutoff) count++;
-    }
-    return count;
-  } catch (e) {
-    return 0;
-  }
-}
