@@ -11,8 +11,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    await kv.del("subs");
-    await kv.del("submissions");
+    await kv.set("submissions", []);
     await kv.del("active_users");
     return res.status(200).json({ success: true, message: "Reset done" });
   } catch (error) {

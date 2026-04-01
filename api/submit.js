@@ -1,6 +1,6 @@
 const { kv } = require("@vercel/kv");
 
-const KEY = "subs";
+const KEY = "submissions";
 const USERS_KEY = "active_users";
 const TTL_MS = 30 * 60 * 1000; // 30 minutes
 
@@ -33,6 +33,7 @@ module.exports = async (req, res) => {
     }
 
     const now = Date.now();
+    const cutoff = now - TTL_MS;
 
     if (req.method === "POST") {
       const { text, userId } = body;
@@ -47,8 +48,11 @@ module.exports = async (req, res) => {
         userId: userId || "anon",
       };
 
-      // Atomic append - no race condition
-      await kv.rpush(KEY, JSON.stringify(submission));
+      // Read current, append, filter expired, write back
+      let submissions = (await kv.get(KEY)) || [];
+      submissions.push(submission);
+      submissions = submissions.filter((s) => s.timestamp > cutoff);
+      await kv.set(KEY, submissions);
 
       if (userId) {
         await kv.hset(USERS_KEY, { [userId]: now });
@@ -62,18 +66,8 @@ module.exports = async (req, res) => {
         activeUsers,
       });
     } else if (req.method === "GET") {
-      const raw = (await kv.lrange(KEY, 0, -1)) || [];
-      const cutoff = now - TTL_MS;
-
-      const submissions = raw
-        .map((r) => {
-          try {
-            return typeof r === "string" ? JSON.parse(r) : r;
-          } catch {
-            return null;
-          }
-        })
-        .filter((s) => s && s.timestamp > cutoff);
+      let submissions = (await kv.get(KEY)) || [];
+      submissions = submissions.filter((s) => s.timestamp > cutoff);
 
       const activeUsers = await countActive();
 
