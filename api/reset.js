@@ -11,8 +11,20 @@ module.exports = async (req, res) => {
   }
 
   try {
-    await kv.set("submissions", []);
-    await kv.del("active_users");
+    // Clear all submission fields from the hash
+    const all = (await kv.hgetall("futures")) || {};
+    const keys = Object.keys(all);
+    if (keys.length > 0) {
+      await kv.hdel("futures", ...keys);
+    }
+
+    // Clear active users
+    const users = (await kv.hgetall("active_users")) || {};
+    const userKeys = Object.keys(users);
+    if (userKeys.length > 0) {
+      await kv.hdel("active_users", ...userKeys);
+    }
+
     return res.status(200).json({ success: true, message: "Reset done" });
   } catch (error) {
     console.error("Reset error:", error);

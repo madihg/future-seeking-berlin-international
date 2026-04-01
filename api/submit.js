@@ -1,6 +1,6 @@
 const { kv } = require("@vercel/kv");
 
-const KEY = "submissions";
+const KEY = "futures";
 const USERS_KEY = "active_users";
 const TTL_MS = 30 * 60 * 1000; // 30 minutes
 
@@ -41,18 +41,16 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: "Text is required" });
       }
 
+      const subId = now + "-" + Math.random().toString(36).substr(2, 9);
       const submission = {
-        id: now + "-" + Math.random().toString(36).substr(2, 9),
+        id: subId,
         text: text.trim(),
         timestamp: now,
         userId: userId || "anon",
       };
 
-      // Read current, append, filter expired, write back
-      let submissions = (await kv.get(KEY)) || [];
-      submissions.push(submission);
-      submissions = submissions.filter((s) => s.timestamp > cutoff);
-      await kv.set(KEY, submissions);
+      // Use hset - proven to work on this KV instance
+      await kv.hset(KEY, { [subId]: JSON.stringify(submission) });
 
       if (userId) {
         await kv.hset(USERS_KEY, { [userId]: now });
@@ -66,8 +64,34 @@ module.exports = async (req, res) => {
         activeUsers,
       });
     } else if (req.method === "GET") {
-      let submissions = (await kv.get(KEY)) || [];
-      submissions = submissions.filter((s) => s.timestamp > cutoff);
+      const all = (await kv.hgetall(KEY)) || {};
+
+      const submissions = Object.values(all)
+        .map((v) => {
+          try {
+            return typeof v === "string" ? JSON.parse(v) : v;
+          } catch {
+            return null;
+          }
+        })
+        .filter((s) => s && s.timestamp > cutoff)
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      // Clean up expired entries
+      const expired = Object.entries(all)
+        .filter(([, v]) => {
+          try {
+            const s = typeof v === "string" ? JSON.parse(v) : v;
+            return !s || s.timestamp <= cutoff;
+          } catch {
+            return true;
+          }
+        })
+        .map(([k]) => k);
+
+      if (expired.length > 0) {
+        await kv.hdel(KEY, ...expired);
+      }
 
       const activeUsers = await countActive();
 
@@ -92,7 +116,7 @@ async function countActive() {
     const users = (await kv.hgetall(USERS_KEY)) || {};
     const cutoff = Date.now() - 2 * 60 * 1000;
     let count = 0;
-    for (const [id, lastSeen] of Object.entries(users)) {
+    for (const [, lastSeen] of Object.entries(users)) {
       if (lastSeen > cutoff) count++;
     }
     return count;
